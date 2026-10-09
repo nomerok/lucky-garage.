@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lucky Garage</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#10131b;color:white;font-family:Arial,sans-serif;padding:16px}
+header{display:flex;justify-content:space-between;align-items:center;background:#1d2230;padding:14px;border-radius:16px}
+h1{font-size:23px;color:#8cffad}
+.balance{background:#292f40;padding:10px;border-radius:12px}
+nav{display:flex;gap:8px;margin:18px 0}
+button{border:0;border-radius:12px;padding:13px;background:#30384b;color:white;font-size:15px;font-weight:bold}
+nav button{flex:1}
+button.active,.main{background:#32b96b;color:#08150c}
+.panel{background:#1d2230;border-radius:18px;padding:18px;margin:14px 0}
+.plate{background:#f7f7f7;color:#111;border:5px solid #777;border-radius:12px;text-align:center;padding:22px 8px;font-size:32px;font-weight:900;letter-spacing:4px;margin:18px 0}
+.muted{color:#b4bdcf;font-size:14px}
+.buttons{display:flex;gap:10px}
+.buttons button{flex:1}
+.item{background:#292f40;border-radius:12px;padding:14px;margin:10px 0}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<header>
+<div><h1>🍀 Lucky Garage</h1><div class="muted">Уровень 1</div></div>
+<div class="balance">💰 <span id="money">10000</span> ₽</div>
+</header>
+
+<nav>
+<button class="active" onclick="page('numbers',this)">Номера</button>
+<button onclick="page('cars',this)">Машины</button>
+<button onclick="page('shop',this)">Магазин</button>
+</nav>
+
+<section id="numbers">
+<div class="panel">
+<h2>🎰 Рулетка номеров</h2>
+<div class="muted">Испытай удачу и получи новый номер!</div>
+<div class="plate" id="plate">А777АА 777</div>
+<div id="rarity" style="text-align:center">Обычный номер</div>
+<div id="prize" style="text-align:center;margin:8px">Стоимость: —</div>
+<div class="buttons">
+<button class="main" onclick="spin(1)">Крутить · 1 000 ₽</button>
+<button onclick="spin(5)">×5</button>
+</div>
+</div>
+<div class="panel">
+<h3>🎁 Ежедневный подарок</h3>
+<p>Забирай подарок каждый день!</p>
+<button class="main" onclick="gift()">Получить 20 000 ₽</button>
+</div>
+</section>
+
+<section id="cars" class="hidden">
+<div class="panel"><h2>🚘 Машины</h2><p class="muted">Открывай контейнеры и собирай коллекцию.</p>
+<div class="item">📦 Обычный контейнер — 10 000 ₽ <button onclick="carCase(10000,'Обычный')">Открыть</button></div>
+<div class="item">📦 Редкий контейнер — 30 000 ₽ <button onclick="carCase(30000,'Редкий')">Открыть</button></div>
+<div class="item">📦 Эпический контейнер — 100 000 ₽ <button onclick="carCase(100000,'Эпический')">Открыть</button></div>
+<div class="item">📦 Легендарный контейнер — 300 000 ₽ <button onclick="carCase(300000,'Легендарный')">Открыть</button></div>
+</div>
+<div class="panel"><h3>🏠 Автопарк</h3><div id="garage">Пока машин нет.</div></div>
+</section>
+
+<section id="shop" class="hidden">
+<div class="panel"><h2>🛒 Магазин</h2>
+<p>Выбери валюту:</p>
+<button onclick="currency='₽';update()">RUB ₽</button>
+<button onclick="currency='₸';update()">KZT ₸</button>
+<button onclick="currency='$';update()">USD $</button>
+<p class="muted">Демо-магазин. Покупки за реальные деньги пока отключены.</p>
+</div>
+</section>
+
+<div class="panel">
+<h3>🎡 Колесо удачи</h3>
+<p class="muted">Функция будет добавлена в следующих шагах.</p>
+<button onclick="alert('Колесо удачи скоро появится!')">Крутить колесо</button>
+</div>
+
+<script>
+let money=10000,currency='₽',gotGift=false;
+function update(){document.getElementById('money').textContent=money.toLocaleString('ru-RU');document.querySelector('.balance').lastChild.textContent=' '+currency}
+function page(id,btn){['numbers','cars','shop'].forEach(x=>document.getElementById(x).classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));btn.classList.add('active')}
+function spin(count){
+let cost=1000*count;
+if(money<cost){alert('Не хватает денег!');return}
+money-=cost;
+let tiers=[
+{name:'Обычный',chance:65,min:1,max:130},
+{name:'Необычный',chance:20,min:150,max:380},
+{name:'Редкий',chance:8,min:700,max:1800},
+{name:'Эпический',chance:2.5,min:4200,max:7000},
+{name:'Легендарный',chance:.4,min:50000,max:70000},
+{name:'Мифический',chance:3.99999,min:160000,max:290000},
+{name:'Секретный',chance:.1,min:500000,max:1000000},
+{name:'Админский',chance:.00001,min:5000000,max:15000000}
+];
+for(let i=0;i<count;i++){
+let r=Math.random()*100,s=0,t=tiers[0];
+for(let x of tiers){s+=x.chance;if(r<s){t=x;break}}
+let value=Math.floor((t.min+Math.random()*(t.max-t.min+1))*count);
+document.getElementById('rarity').textContent=t.name+' номер';
+document.getElementById('prize').textContent='Стоимость: '+value.toLocaleString('ru-RU')+' '+currency;
+document.getElementById('plate').textContent='А'+Math.floor(100+Math.random()*900)+'АА '+Math.floor(1+Math.random()*999);
+if(i===count-1)alert('Выпал '+t.name+' номер! Стоимость: '+value.toLocaleString('ru-RU')+' '+currency);
+}
+update();
+}
+function gift(){if(gotGift){alert('Подарок уже получен!');return}gotGift=true;money+=20000;update();alert('Ты получил 20 000!')}
+function carCase(cost,kind){if(money<cost){alert('Не хватает денег!');return}money-=cost;update();let names=['Falcon GT','Raven Sport','Vortex X','Titan R','Nova RS'];let name=names[Math.floor(Math.random()*names.length)];document.getElementById('garage').innerHTML+='<div class="item">🚘 '+name+'<br><span class="muted">'+kind+' автомобиль</span></div>';alert('Выпала машина '+name+'!')}
+update();
+</script>
+</body>
+</html>
