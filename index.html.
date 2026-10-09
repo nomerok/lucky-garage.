@@ -2,116 +2,82 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Lucky Garage</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#10131b;color:white;font-family:Arial,sans-serif;padding:16px}
-header{display:flex;justify-content:space-between;align-items:center;background:#1d2230;padding:14px;border-radius:16px}
-h1{font-size:23px;color:#8cffad}
-.balance{background:#292f40;padding:10px;border-radius:12px}
-nav{display:flex;gap:8px;margin:18px 0}
-button{border:0;border-radius:12px;padding:13px;background:#30384b;color:white;font-size:15px;font-weight:bold}
-nav button{flex:1}
+body{margin:0;background:#10151d;color:#fff;font-family:Arial,sans-serif;padding:15px}
+header{display:flex;justify-content:space-between;align-items:center;gap:8px}
+h1{font-size:23px;color:#8cffad;margin:8px 0}
+.balance,.panel,.item{background:#292f40;padding:14px;border-radius:14px;margin:12px 0}
+nav,.buttons{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
+button,select{border:0;border-radius:10px;padding:13px;background:#30384b;color:white;font-size:15px;font-weight:bold}
+button{flex:1;cursor:pointer}
 button.active,.main{background:#32b96b;color:#08150c}
-.panel{background:#1d2230;border-radius:18px;padding:18px;margin:14px 0}
-.plate{background:#f7f7f7;color:#111;border:5px solid #777;border-radius:12px;text-align:center;padding:22px 8px;font-size:32px;font-weight:900;letter-spacing:4px;margin:18px 0}
+.plate{background:#f7f7f7;color:#111;border:5px solid #777;border-radius:12px;padding:18px 8px;text-align:center;font-size:30px;font-weight:bold;margin:16px 0}
 .muted{color:#b4bdcf;font-size:14px}
-.buttons{display:flex;gap:10px}
-.buttons button{flex:1}
-.item{background:#292f40;border-radius:12px;padding:14px;margin:10px 0}
+.item{margin:10px 0}
 .hidden{display:none}
 </style>
 </head>
 <body>
 <header>
-<div><h1>🍀 Lucky Garage</h1><div class="muted">Уровень 1</div></div>
-<div class="balance">💰 <span id="money">10000</span> ₽</div>
+<div><h1>🍀 Lucky Garage</h1><div class="muted">Уровень 1 · <span id="country">Россия</span></div></div>
+<select id="currency" onchange="changeCurrency()">
+<option value="RUB">🇷🇺 RUB</option>
+<option value="KZT">🇰🇿 KZT</option>
+<option value="USD">🇺🇸 USD</option>
+</select>
 </header>
-
+<div class="balance">💰 Баланс: <b id="money">100000</b> <span id="symbol">₽</span><div id="luck" class="muted">🍀 Удача обычная</div></div>
 <nav>
 <button class="active" onclick="page('numbers',this)">Номера</button>
 <button onclick="page('cars',this)">Машины</button>
 <button onclick="page('shop',this)">Магазин</button>
 </nav>
-
 <section id="numbers">
 <div class="panel">
-<h2>🎰 Рулетка номеров</h2>
+<h3>🎰 Рулетка номеров</h3>
 <div class="muted">Испытай удачу и получи новый номер!</div>
-<div class="plate" id="plate">А777АА 777</div>
+<div class="plate" id="plate">A777AA 777</div>
 <div id="rarity" style="text-align:center">Обычный номер</div>
-<div id="prize" style="text-align:center;margin:8px">Стоимость: —</div>
+<div id="prize" style="text-align:center;margin:10px">Стоимость: —</div>
 <div class="buttons">
-<button class="main" onclick="spin(1)">Крутить · 1 000 ₽</button>
+<button class="main" onclick="spin(1)">Крутить · 1 000 <span class="sym">₽</span></button>
 <button onclick="spin(5)">×5</button>
 </div>
 </div>
-<div class="panel">
-<h3>🎁 Ежедневный подарок</h3>
-<p>Забирай подарок каждый день!</p>
-<button class="main" onclick="gift()">Получить 20 000 ₽</button>
-</div>
+<div class="panel"><h3>🎁 Подарок на день</h3><p id="gifttext">Забери ежедневный подарок!</p><button class="main" onclick="gift()">Получить подарок</button></div>
 </section>
-
 <section id="cars" class="hidden">
 <div class="panel"><h2>🚘 Машины</h2><p class="muted">Открывай контейнеры и собирай коллекцию.</p>
-<div class="item">📦 Обычный контейнер — 10 000 ₽ <button onclick="carCase(10000,'Обычный')">Открыть</button></div>
-<div class="item">📦 Редкий контейнер — 30 000 ₽ <button onclick="carCase(30000,'Редкий')">Открыть</button></div>
-<div class="item">📦 Эпический контейнер — 100 000 ₽ <button onclick="carCase(100000,'Эпический')">Открыть</button></div>
-<div class="item">📦 Легендарный контейнер — 300 000 ₽ <button onclick="carCase(300000,'Легендарный')">Открыть</button></div>
+<div class="item">📦 Обычный контейнер — 10 000 <span class="sym">₽</span><button onclick="carCase(10000,'Обычный')">Открыть</button></div>
+<div class="item">📦 Редкий контейнер — 30 000 <span class="sym">₽</span><button onclick="carCase(30000,'Редкий')">Открыть</button></div>
+<div class="item">📦 Эпический контейнер — 100 000 <span class="sym">₽</span><button onclick="carCase(100000,'Эпический')">Открыть</button></div>
+<div class="item">📦 Легендарный контейнер — 300 000 <span class="sym">₽</span><button onclick="carCase(300000,'Легендарный')">Открыть</button></div>
 </div>
-<div class="panel"><h3>🏠 Автопарк</h3><div id="garage">Пока машин нет.</div></div>
+<div class="panel"><h3>🚗 Автопарк</h3><div id="garage">Пока машин нет.</div></div>
 </section>
-
 <section id="shop" class="hidden">
-<div class="panel"><h2>🛒 Магазин</h2>
-<p>Выбери валюту:</p>
-<button onclick="currency='₽';update()">RUB ₽</button>
-<button onclick="currency='₸';update()">KZT ₸</button>
-<button onclick="currency='$';update()">USD $</button>
-<p class="muted">Демо-магазин. Покупки за реальные деньги пока отключены.</p>
-</div>
+<div class="panel"><h2>🛒 Магазин</h2><p>Пополнение баланса и покупка улучшений пока недоступны.</p><h3>🎡 Колесо удачи</h3><button onclick="wheel()">Испытать удачу · 10 000 <span class="sym">₽</span></button><h3>🍀 Удача ×2</h3><button onclick="luckBoost()">Активировать · 10 000 <span class="sym">₽</span></button></div>
+<div class="panel"><h3>📜 Правила</h3><p>Играй честно, собирай номера и машины. Баланс хранится в этом браузере. Не очищай данные браузера, чтобы не потерять прогресс.</p></div>
 </section>
-
-<div class="panel">
-<h3>🎡 Колесо удачи</h3>
-<p class="muted">Функция будет добавлена в следующих шагах.</p>
-<button onclick="alert('Колесо удачи скоро появится!')">Крутить колесо</button>
-</div>
-
 <script>
-let money=10000,currency='₽',gotGift=false;
-function update(){document.getElementById('money').textContent=money.toLocaleString('ru-RU');document.querySelector('.balance').lastChild.textContent=' '+currency}
-function page(id,btn){['numbers','cars','shop'].forEach(x=>document.getElementById(x).classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));btn.classList.add('active')}
-function spin(count){
-let cost=1000*count;
-if(money<cost){alert('Не хватает денег!');return}
-money-=cost;
-let tiers=[
-{name:'Обычный',chance:65,min:1,max:130},
-{name:'Необычный',chance:20,min:150,max:380},
-{name:'Редкий',chance:8,min:700,max:1800},
-{name:'Эпический',chance:2.5,min:4200,max:7000},
-{name:'Легендарный',chance:.4,min:50000,max:70000},
-{name:'Мифический',chance:3.99999,min:160000,max:290000},
-{name:'Секретный',chance:.1,min:500000,max:1000000},
-{name:'Админский',chance:.00001,min:5000000,max:15000000}
-];
-for(let i=0;i<count;i++){
-let r=Math.random()*100,s=0,t=tiers[0];
-for(let x of tiers){s+=x.chance;if(r<s){t=x;break}}
-let value=Math.floor((t.min+Math.random()*(t.max-t.min+1))*count);
-document.getElementById('rarity').textContent=t.name+' номер';
-document.getElementById('prize').textContent='Стоимость: '+value.toLocaleString('ru-RU')+' '+currency;
-document.getElementById('plate').textContent='А'+Math.floor(100+Math.random()*900)+'АА '+Math.floor(1+Math.random()*999);
-if(i===count-1)alert('Выпал '+t.name+' номер! Стоимость: '+value.toLocaleString('ru-RU')+' '+currency);
-}
-update();
-}
-function gift(){if(gotGift){alert('Подарок уже получен!');return}gotGift=true;money+=20000;update();alert('Ты получил 20 000!')}
-function carCase(cost,kind){if(money<cost){alert('Не хватает денег!');return}money-=cost;update();let names=['Falcon GT','Raven Sport','Vortex X','Titan R','Nova RS'];let name=names[Math.floor(Math.random()*names.length)];document.getElementById('garage').innerHTML+='<div class="item">🚘 '+name+'<br><span class="muted">'+kind+' автомобиль</span></div>';alert('Выпала машина '+name+'!')}
-update();
+let money=100000, currency='RUB', symbol='₽', cars=[], numbers=[], giftDay=0, luck=1;
+const symbols={RUB:'₽',KZT:'₸',USD:'$'};
+function save(){try{localStorage.setItem('luckyGarage',JSON.stringify({money,currency,cars,numbers,giftDay,luck}))}catch(e){}}
+function load(){try{let d=JSON.parse(localStorage.getItem('luckyGarage'));if(d){money=d.money??money;currency=d.currency||currency;cars=d.cars||[];numbers=d.numbers||[];giftDay=d.giftDay||0;luck=d.luck||1}}catch(e){}}
+function render(){symbol=symbols[currency];document.getElementById('money').textContent=Math.floor(money).toLocaleString('ru-RU');document.getElementById('symbol').textContent=symbol;document.querySelectorAll('.sym').forEach(e=>e.textContent=symbol);document.getElementById('currency').value=currency;document.getElementById('country').textContent={RUB:'Россия',KZT:'Казахстан',USD:'США'}[currency];document.getElementById('luck').textContent=luck>1?'🍀 Удача ×'+luck:'🍀 Удача обычная';document.getElementById('garage').innerHTML=cars.length?cars.map(c=>'🚘 '+c+' <button onclick="sellCar('+cars.indexOf(c)+')">Продать</button>').join('<hr>'):'Пока машин нет.';document.getElementById('gifttext').textContent=giftDay>=3?'Ежедневные подарки получены!':'Доступен подарок дня '+(giftDay+1)}
+function changeCurrency(){currency=document.getElementById('currency').value;render();save()}
+function page(id,btn){document.querySelectorAll('section').forEach(s=>s.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));btn.classList.add('active')}
+function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+function spin(count){let cost=1000*count;if(money<cost){alert('Недостаточно денег!');return}money-=cost;let r=Math.random()*100,rarity,value;if(r<.00001){rarity='Админ';value=rand(5000000,15000000)}else if(r<.10001){rarity='Секретный';value=rand(500000,1000000)}else if(r<4.10001){rarity='Мифический';value=rand(160000,290000)}else if(r<4.50001){rarity='Легендарный';value=rand(50000,70000)}else if(r<7.00001){rarity='Эпический';value=rand(4200,7000)}else if(r<15.00001){rarity='Редкий';value=rand(700,1800)}else if(r<35.00001){rarity='Необычный';value=rand(150,380)}else{rarity='Обычный';value=rand(1,130)}value*=luck;let plate=String.fromCharCode(65+rand(0,25))+rand(100,999)+String.fromCharCode(65+rand(0,25))+String.fromCharCode(65+rand(0,25))+' '+rand(1,999);document.getElementById('plate').textContent=plate;document.getElementById('rarity').textContent=rarity+' номер';document.getElementById('prize').textContent='Стоимость: '+Math.floor(value).toLocaleString('ru-RU')+' '+symbol;numbers.push({plate,rarity,value});save();render()}
+function gift(){if(giftDay>=3){alert('Все подарки уже забраны!');return}let amounts=[20000,50000,100000];money+=amounts[giftDay];alert('Подарок: '+amounts[giftDay].toLocaleString('ru-RU')+' '+symbol);giftDay++;save();render()}
+function carCase(cost,level){if(money<cost){alert('Недостаточно денег!');return}money-=cost;let pool=level==='Обычный'?['Fiat Panda','Toyota Yaris','Honda Civic']:level==='Редкий'?['BMW M3','Audi RS5','Mercedes C63']:level==='Эпический'?['Porsche 911','Lamborghini Huracan','Ferrari F8']:['Bugatti Chiron','Ferrari SF90','Lamborghini Aventador','McLaren P1'];let c=pool[rand(0,pool.length-1)];cars.push(c);alert('Ты получил машину: '+c);save();render()}
+function sellCar(i){if(!cars[i])return;money+=10000;alert('Машина продана за 10 000 '+symbol);cars.splice(i,1);save();render()}
+function wheel(){if(money<10000){alert('Недостаточно денег!');return}money-=10000;let win=rand(0,4);if(win===0){money+=50000;alert('🎉 Выигрыш 50 000 '+symbol)}else alert('В следующий раз повезёт!');save();render()}
+function luckBoost(){if(money<10000){alert('Недостаточно денег!');return}money-=10000;luck=2;alert('Удача ×2 активирована на время этой сессии!');save();render()}
+load();render();
 </script>
 </body>
 </html>
